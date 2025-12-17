@@ -85,7 +85,8 @@ export class LoginComponent {
   protected environment = this.config.configuration;
   protected loginMode = this.loginService.loginMode;
 
-  protected showLogin = computed(() => this.showSimpleLogin() || [loginModes.password, loginModes.simple].includes(this.loginMode()));
+
+  protected showLogin = computed(() => this.showSimpleLogin() || [loginModes.password, loginModes.simple, loginModes.ssoOnly].includes(this.loginMode()));
 
   protected isInvite = this.router.url.includes('invite');
   protected loginForm = new FormGroup({

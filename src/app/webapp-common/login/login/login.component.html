@@ -15,7 +15,7 @@
           <div class="circle"></div>
         }
         <form [formGroup]="loginForm" [class.d-none]="!loginMode()">
-          @if (showLogin()) {
+          @if (showLogin() && loginMode() !== loginModeEnum.ssoOnly) {
             <div class="username-input pt-4">
               <mat-form-field appearance="outline">
                 <mat-label>{{ loginMode() === loginModeEnum.password ? 'Username' : 'Full Name' }}</mat-label>
@@ -42,7 +42,7 @@
               Invalid User/Password combination
             </div>
           }
-          @if (showLogin()) {
+          @if (showLogin() && loginMode() !== loginModeEnum.ssoOnly) {
             <button mat-flat-button (click)="login()" [disabled]="(!loginForm.valid || showSpinner())">
               @if (showSpinner()) {
                 <mat-spinner class="spinner" diameter="16" color="accent"></mat-spinner>
@@ -50,6 +50,26 @@
               {{ buttonCaption }}
             </button>
           }
+
+          @if (loginMode() === loginModeEnum.password || loginMode() === loginModeEnum.ssoOnly) {
+            @if (loginMode() === loginModeEnum.password) {
+              <div class="sso-separator">
+                <span>OR</span>
+              </div>
+             }
+
+
+            <a href="/api/v2.2/sso.cognito_login" class="sso-button microsoft-sso">
+              <svg class="microsoft-icon" width="21" height="21" viewBox="0 0 21 21">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+              </svg>
+              <span>Align SSO</span><!-- SSO Button -->
+            </a>
+          }
+
 
           <mat-autocomplete #auto="matAutocomplete">
             @for (option of filteredOptions$ | ngrxPush; track option.name) {

@@ -138,6 +138,20 @@ export class BaseLoginService {
 
   protected calcLoginMode(res: LoginModeResponse) {
     const fallback = this.configService.configuration().loginFallback;
+
+    // If basic auth is disabled, check for SSO
+    if (!res.basic.enabled) {
+      // Check if SSO providers are available
+      if (res.sso && Object.keys(res.sso).length > 0) {
+        return loginModes.ssoOnly;
+      }
+      if (res.sso_providers && res.sso_providers.length > 0) {
+        return loginModes.ssoOnly;
+      }
+      // If no SSO available, show error instead of simple mode
+      return loginModes.error;
+    }
+
     return  res.basic.enabled ?
       loginModes.password :
         fallback === 'error' ?
